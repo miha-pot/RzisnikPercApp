@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/RPApplication/.vs/RPApplication
+/RPApplication/RPApplication.Entities/bin
+/RPApplication/RPApplication.Entities/obj
+/RPApplication/RPApplication.Repositories/obj
+/RPApplication/RPApplication.RepositoryContracts/bin
+/RPApplication/RPApplication.RepositoryContracts/obj
+/RPApplication/RPApplication.ServiceContracts/bin
+/RPApplication/RPApplication.ServiceContracts/obj
+/RPApplication/RPApplication.Services/bin
+/RPApplication/RPApplication.Services/obj
+/RPApplication/RPApplication.WebAPI/bin
+/RPApplication/RPApplication.WebAPI/obj/Debug/net8.0
+/RPApplication/RPApplication.WebAPI/obj
+/RPApplication/RPApplication.WebAPI/RPApplication.WebAPI.csproj.user
+/RPApplication/RPApplication.Repositories/bin

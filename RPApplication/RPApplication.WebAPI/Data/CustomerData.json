@@ -1,0 +1,111 @@
+[
+  {
+    "externalCode": "2",
+    "mpCode": "00002",
+    "name": "Janez Novak",
+    "street": "Stranka pot 2",
+    "serialNo": "21118243",
+    "values": [
+      {
+        "reg1Value": 860.37,
+        "regDate": "2020-10-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 863.7,
+        "regDate": "2020-10-06T11:43:59",
+        "valueTypeDescription": "Water_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 927.31,
+        "regDate": "2021-03-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      }
+    ]
+  },
+  {
+    "externalCode": "3",
+    "serialNo": "2571000884",
+    "mpCode": "00003",
+    "name": "Jana Novak",
+    "street": "Stranka pot 3",
+    "values": [
+      {
+        "reg1Value": 675.03,
+        "regDate": "2020-07-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 677.24,
+        "regDate": "2020-07-13T12:16:38",
+        "valueTypeDescription": "Water_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 686.1,
+        "regDate": "2020-10-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      }
+    ]
+  },
+  {
+    "externalCode": "4",
+    "serialNo": "2170006634",
+    "mpCode": "00004",
+    "name": "Mojca Novak",
+    "street": "Stranka pot 4",
+
+    "values": [
+      {
+        "reg1Value": 405.31,
+        "regDate": "2020-07-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 408.68,
+        "regDate": "2020-07-13T12:16:27",
+        "valueTypeDescription": "Water_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 432.02,
+        "regDate": "2020-10-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      }
+    ]
+  },
+  {
+    "externalCode": "5",
+    "serialNo": "2571002381",
+    "mpCode": "00006",
+    "name": "Nik Novak",
+    "street": "Stranka pot 5",
+    "values": [
+      {
+        "reg1Value": 651.07,
+        "regDate": "2020-07-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 657.11,
+        "regDate": "2020-07-13T12:14:33",
+        "valueTypeDescription": "Water_Value",
+        "valueTypeUnit": "m3"
+      },
+      {
+        "reg1Value": 692.91,
+        "regDate": "2020-10-01T00:00:00",
+        "valueTypeDescription": "Water_Billing_Value",
+        "valueTypeUnit": "m3"
+      }
+    ]
+  }
+]
