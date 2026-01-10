@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4 d17.14
+VisualStudioVersion = 17.14.36811.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPApplication.WebAPI", "RPApplication.WebAPI\RPApplication.WebAPI.csproj", "{1655A146-A425-4068-B7D8-37AF575ED1C3}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPApplication.Services", "RPApplication.Services\RPApplication.Services.csproj", "{7ADA1B00-7824-4B46-B2AA-FA864C46224E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPApplication.ServiceContracts", "RPApplication.ServiceContracts\RPApplication.ServiceContracts.csproj", "{36236DCF-331B-4954-97F7-81E82A3442F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPApplication.WebGUI", "RPApplication.GUI\RPApplication.WebGUI.csproj", "{DC451D84-863E-4E97-BE4B-34E949FB4DCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{36236DCF-331B-4954-97F7-81E82A3442F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36236DCF-331B-4954-97F7-81E82A3442F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36236DCF-331B-4954-97F7-81E82A3442F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC451D84-863E-4E97-BE4B-34E949FB4DCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC451D84-863E-4E97-BE4B-34E949FB4DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC451D84-863E-4E97-BE4B-34E949FB4DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC451D84-863E-4E97-BE4B-34E949FB4DCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

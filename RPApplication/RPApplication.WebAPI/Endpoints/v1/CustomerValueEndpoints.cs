@@ -1,4 +1,5 @@
-﻿using RPApplication.ServiceContracts;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using RPApplication.ServiceContracts;
 using RPApplication.ServiceContracts.DTO.CustomerValueDTO;
 using RPApplication.Services.Helpers;
 using System.ComponentModel.DataAnnotations;
@@ -11,9 +12,6 @@ namespace RPApplication.WebAPI.Endpoints.v1
         {
             app.MapGet("api/v1/values", GetAll);
             app.MapPost("api/v1/values/create", Create);
-            app.MapDelete("api/v1/values/delete", Delete);
-            app.MapGet("api/v1/values/details", Details);
-            app.MapPut("api/v1/values/update", Update);
         }
 
         public static async Task<IResult> GetAll(string customerCode,
@@ -39,78 +37,18 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem(errorsMessages);
             }
 
-            CustomerValueResponse? customerResponse = await customerValueService.CreateItem(addRequest);
+            CustomerValueResponse? customerValueResponse = await customerValueService.GetByValueAndDate(addRequest.Reg1Value,
+                                                                                                        addRequest.RegDate);
 
-            return Results.Ok(customerResponse);
-        }
-
-        public static async Task<IResult> Delete(string? valueId,
-                                                 ICustomerValueService customerValueService)
-        {
-            if (string.IsNullOrEmpty(valueId))
+            if (customerValueResponse != null)
             {
-                return Results.Problem("Value id was not provided!");
+                string dateString = addRequest.RegDate!.Value.ToString("dd.MM.yyyy HH:ss");
+                return Results.Problem($"Value id ({addRequest.Reg1Value},{dateString}) is already taken!");
             }
 
-            CustomerValueResponse? valueResponse = await customerValueService.GetItemById(valueId);
+            customerValueResponse = await customerValueService.CreateItem(addRequest);
 
-            if (valueResponse == null)
-            {
-                return Results.Problem($"Value with provided id ({valueId}) was not found!");
-            }
-
-            bool result = await customerValueService.DeleteItem(valueId);
-
-            if (!result)
-            {
-                return Results.Ok("Error while deleting value. Check backend logs!");
-            }
-
-            return Results.Ok("Value was successfuly deleted");
-        }
-
-        public static async Task<IResult> Details(string valueId,
-                                                  ICustomerValueService customerValueService)
-        {
-            if (string.IsNullOrEmpty(valueId))
-            {
-                return Results.Problem("Value id was not provided!");
-            }
-
-            CustomerValueResponse? valueResponse = await customerValueService.GetItemById(valueId);
-
-            if (valueResponse == null)
-            {
-                return Results.Problem($"Value with provided id ({valueId}) was not found!");
-            }
-
-            return Results.Ok(valueResponse);
-        }
-
-
-        public static async Task<IResult> Update(CustomerValueUpdateRequest? updateRequest,
-                                                 ICustomerValueService customerValueService)
-        {
-            if (updateRequest == null)
-            {
-                return Results.Problem("Value data was not provided!");
-            }
-
-            if (!ValidationHelper.IsModelValid(updateRequest, out List<ValidationResult> errors))
-            {
-                var errorsMessages = string.Join("|", errors.Select(x => x.ErrorMessage));
-
-                return Results.Problem(errorsMessages);
-            }
-
-            CustomerValueResponse? customerResponse = await customerValueService.UpdateItem(updateRequest);
-
-            if (customerResponse == null)
-            {
-                return Results.Problem("There was an error updating value. Check backend logs!");
-            }
-
-            return Results.Ok(customerResponse);
+            return Results.Ok(customerValueResponse);
         }
     }
 }

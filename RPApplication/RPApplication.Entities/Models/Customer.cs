@@ -13,7 +13,7 @@ namespace RPApplication.Entities.Models
 
         public string? Street { get; set; }
 
-        public int SerialNumber { get; set; }
+        public string? SerialNo { get; set; }
 
         public List<CustomerValue> Values { get; set; } = [];
     }

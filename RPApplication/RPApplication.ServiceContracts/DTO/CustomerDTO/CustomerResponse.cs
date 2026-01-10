@@ -12,7 +12,7 @@ namespace RPApplication.ServiceContracts.DTO.CustomerDTO
 
         public string? Street { get; set; }
 
-        public int SerialNumber { get; set; }
+        public string? SerialNumber { get; set; }
 
         public CustomerUpdateRequest ToCustomerUpdateRequest()
         {
@@ -37,7 +37,7 @@ namespace RPApplication.ServiceContracts.DTO.CustomerDTO
                 MpCode = customer.MpCode,
                 Name = customer.Name,
                 Street = customer.Street,
-                SerialNumber = customer.SerialNumber,
+                SerialNumber = customer.SerialNo,
             };
         }
     }

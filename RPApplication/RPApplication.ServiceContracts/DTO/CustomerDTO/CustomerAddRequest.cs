@@ -5,6 +5,9 @@ namespace RPApplication.ServiceContracts.DTO.CustomerDTO
 {
     public class CustomerAddRequest
     {
+        [Required(ErrorMessage = "Customer external code is required!")]
+        public string? ExternalCode { get; set; }
+
         [Required(ErrorMessage = "Customer mpCode is required!")]
         public string? MpCode { get; set; }
 
@@ -15,16 +18,17 @@ namespace RPApplication.ServiceContracts.DTO.CustomerDTO
         public string? Street { get; set; }
 
         [Required(ErrorMessage = "Customer serial number is required!")]
-        public int SerialNumber { get; set; }
+        public string? SerialNumber { get; set; }
 
         public Customer ToCustomer()
         {
             return new Customer()
             {
+                ExternalCode = ExternalCode,
                 MpCode = MpCode,
                 Name = Name,
                 Street = Street,
-                SerialNumber = SerialNumber
+                SerialNo = SerialNumber
             };
         }
     }

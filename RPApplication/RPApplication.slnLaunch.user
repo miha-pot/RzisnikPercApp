@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "RPApplication.WebAPI\\RPApplication.WebAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "RPApplication.GUI\\RPApplication.WebGUI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

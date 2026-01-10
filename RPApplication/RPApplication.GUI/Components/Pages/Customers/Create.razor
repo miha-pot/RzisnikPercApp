@@ -1,0 +1,128 @@
+﻿@page "/customers/create"
+@using System.ComponentModel.DataAnnotations
+@using RPApplication.WebGUI.DTOs.CustomerDTO
+@using RPApplication.WebGUI.ServiceContracts
+@inject ICustomerService CustomerService
+@inject NavigationManager NavManager
+@rendermode InteractiveServer
+
+<div class="container mt-4">
+    <div class="card shadow-sm" style="max-width: 600px; margin: auto;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Create New Customer</h4>
+        </div>
+        <div class="card-body">
+
+            <EditForm Model="customer" OnValidSubmit="HandleSubmit" FormName="CreateCustomerForm">
+                <DataAnnotationsValidator />
+
+                @if (apiErrors != null && apiErrors.Length > 0)
+                {
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach (var error in apiErrors)
+                            {
+                                <li>@error</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label class="form-label">External Code</label>
+                    <InputText @bind-Value="customer.ExternalCode" class="form-control" />
+                    <ValidationMessage For="@(() => customer.ExternalCode)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">MP Code</label>
+                    <InputText @bind-Value="customer.MpCode" class="form-control" />
+                    <ValidationMessage For="@(() => customer.MpCode)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <InputText @bind-Value="customer.Name" class="form-control" />
+                    <ValidationMessage For="@(() => customer.Name)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Street</label>
+                    <InputText @bind-Value="customer.Street" class="form-control" />
+                    <ValidationMessage For="@(() => customer.Street)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Serial Number</label>
+                    <InputText @bind-Value="customer.SerialNumber" class="form-control" />
+                    <ValidationMessage For="@(() => customer.SerialNumber)" class="text-danger small" />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+
+                    <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span>
+                            <span> Saving...</span>
+                        }
+                        else
+                        {
+                            <span>Save Customer</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm(FormName = "CreateCustomerForm")]
+    private CustomerAddRequest customer { get; set; } = new();
+    private string[]? apiErrors;
+    private bool isSubmitting = false;
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        apiErrors = null;
+
+        // Create a flag to track success
+        bool success = false;
+
+        try
+        {
+            var errors = await CustomerService.Create(customer);
+
+            if (errors == null)
+            {
+                success = true;
+            }
+            else
+            {
+                apiErrors = errors;
+            }
+        }
+        catch (Exception ex)
+        {
+            apiErrors = new[] { "Critical error: " + ex.Message };
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+
+        if (success)
+        {
+            NavManager.NavigateTo("/customers");
+        }
+    }
+
+    private void Cancel()
+    {
+        NavManager.NavigateTo("/customers");
+    }
+}

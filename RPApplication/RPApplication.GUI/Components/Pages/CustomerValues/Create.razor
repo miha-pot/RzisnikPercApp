@@ -1,0 +1,111 @@
+﻿@page "/values/create/{CustomerCode}"
+@using RPApplication.WebGUI.DTOs.CustomerValueDTO
+@using RPApplication.WebGUI.ServiceContracts
+@inject NavigationManager Navigation
+@inject ICustomerValueService CustomerValueService
+@rendermode InteractiveServer
+
+<h3>Add New Customer Value</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@addRequest" OnValidSubmit="HandleValidSubmit" FormName="CreateCustomerValueForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            @if (apiErrors != null && apiErrors.Length > 0)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in apiErrors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="mb-3">
+                <label class="form-label">Reg Value</label>
+                <InputNumber class="form-control" @bind-Value="addRequest.Reg1Value" />
+                <ValidationMessage For="@(() => addRequest.Reg1Value)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Registration Date</label>
+                <InputDate class="form-control" @bind-Value="addRequest.RegDate" />
+                <ValidationMessage For="@(() => addRequest.RegDate)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Value Description</label>
+                <InputText class="form-control" @bind-Value="addRequest.ValueTypeDescription" />
+                <ValidationMessage For="@(() => addRequest.ValueTypeDescription)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Unit (e.g. kg, m, pcs)</label>
+                <InputText class="form-control" @bind-Value="addRequest.ValueTypeUnit" />
+                <ValidationMessage For="@(() => addRequest.ValueTypeUnit)" />
+            </div>
+
+            <button type="submit" class="btn btn-success">Create Value</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? CustomerCode { get; set; }
+
+    [SupplyParameterFromForm(FormName = "CreateCustomerValueForm")]
+    private CustomerValueAddRequest addRequest { get; set; } = new CustomerValueAddRequest();
+
+    private string[]? apiErrors;
+    private bool isSubmitting = false;
+
+    protected override void OnInitialized()
+    {
+        addRequest.RegDate = DateTime.Today;
+        addRequest.CustomerCode = CustomerCode;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        bool success = false;
+        isSubmitting = true;
+
+        try
+        {
+            string[]? errors = await CustomerValueService.Create(addRequest);
+            if (errors == null)
+            {
+                success = true;
+            }
+            else
+            {
+                apiErrors = errors;
+            }
+        }
+        catch (Exception ex)
+        {
+            apiErrors = new[] { "Critical error: " + ex.Message };
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+
+        if (success)
+        {
+            Navigation.NavigateTo($"/values/{CustomerCode}");
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/values/{CustomerCode}");
+    }
+}

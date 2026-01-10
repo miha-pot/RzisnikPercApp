@@ -25,7 +25,7 @@ namespace RPApplication.Repositories
                 query = query.Where(x =>
                 (x.Name!.ToLower().Contains(lowerCaseTerm) ||
                 x.MpCode!.ToLower().Contains(lowerCaseTerm) ||
-                x.SerialNumber.ToString().Contains(lowerCaseTerm)));
+                x.SerialNo!.ToString().Contains(lowerCaseTerm)));
             }
 
             if (!string.IsNullOrWhiteSpace(parameters.SortColumn))

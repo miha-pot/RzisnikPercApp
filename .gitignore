@@ -18,3 +18,6 @@
 /RPApplication/RPApplication.WebAPI/obj
 /RPApplication/RPApplication.WebAPI/RPApplication.WebAPI.csproj.user
 /RPApplication/RPApplication.Repositories/bin
+/RPApplication/RPApplication.GUI/bin
+/RPApplication/RPApplication.GUI/obj
+/RPApplication/.vs/ProjectEvaluation

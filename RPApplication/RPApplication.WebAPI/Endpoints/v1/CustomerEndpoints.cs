@@ -52,27 +52,34 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem(errorsMessages);
             }
 
-            CustomerResponse? customerResponse = await customerService.CreateItem(addRequest);
+            CustomerResponse? customerResponse = await customerService.GetItemById(addRequest.ExternalCode!);
+
+            if (customerResponse != null)
+            {
+                return Results.Problem($"Id {addRequest.ExternalCode} is already taken!");
+            }
+
+            customerResponse = await customerService.CreateItem(addRequest);
 
             return Results.Ok(customerResponse);
         }
 
-        public static async Task<IResult> Delete(string customerId,
+        public static async Task<IResult> Delete(string customerExternalCode,
                                                  ICustomerService customerService)
         {
-            if (string.IsNullOrEmpty(customerId))
+            if (string.IsNullOrEmpty(customerExternalCode))
             {
                 return Results.Problem("Customer id was not provided!");
             }
 
-            CustomerResponse? customerResponse = await customerService.GetItemById(customerId);
+            CustomerResponse? customerResponse = await customerService.GetItemById(customerExternalCode);
 
             if (customerResponse == null)
             {
-                return Results.Problem($"Customer with provided id ({customerId}) was not found!");
+                return Results.Problem($"Customer with provided id ({customerExternalCode}) was not found!");
             }
 
-            bool result = await customerService.DeleteItem(customerId);
+            bool result = await customerService.DeleteItem(customerExternalCode);
 
             if (!result)
             {

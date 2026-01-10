@@ -1,9 +1,8 @@
-﻿using RPApplication.Entities.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace RPApplication.ServiceContracts.DTO.CustomerDTO
+namespace RPApplication.WebGUI.DTOs.CustomerDTO
 {
-    public class CustomerUpdateRequest
+    public class CustomerAddRequest
     {
         [Required(ErrorMessage = "Customer external code is required!")]
         public string? ExternalCode { get; set; }
@@ -19,17 +18,5 @@ namespace RPApplication.ServiceContracts.DTO.CustomerDTO
 
         [Required(ErrorMessage = "Customer serial number is required!")]
         public string? SerialNumber { get; set; }
-
-        public Customer ToCustomer()
-        {
-            return new Customer()
-            {
-                ExternalCode = ExternalCode,
-                MpCode = MpCode,
-                Name = Name,
-                Street = Street,
-                SerialNo = SerialNumber
-            };
-        }
     }
 }

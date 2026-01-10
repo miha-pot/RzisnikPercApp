@@ -45,9 +45,11 @@ namespace RPApplication.Services
         {
             var customerEntities = await _repository.GetAllProductsAsync(parameters);
 
-            var customerDTOList = customerEntities.Select(x => x.ToCustomerResponse()).AsEnumerable();
+            var customerDTOList = customerEntities.Select(x => x.ToCustomerResponse())
+                                                  .AsEnumerable();
 
-            return PagedList<CustomerResponse>.ToPagedList(customerEntities, customerDTOList);
+            return PagedList<CustomerResponse>.ToPagedList(customerEntities,
+                                                           customerDTOList);
         }
 
         public async Task<CustomerResponse?> GetItemById(string itemId)

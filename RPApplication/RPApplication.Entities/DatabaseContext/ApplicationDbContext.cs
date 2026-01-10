@@ -25,19 +25,21 @@ namespace RPApplication.Entities.DatabaseContext
             {
                 entity.HasKey(x => new { x.Reg1Value, x.RegDate });
                 entity.HasOne<Customer>()
-                      .WithMany(x =>  x.Values)
+                      .WithMany(x => x.Values)
                       .HasForeignKey(x => x.CustomerCode);
             });
 
-            string filePath = Path.Combine(AppContext.BaseDirectory, "Data", "CustomerData.json");
-
+            string filePath = Path.Combine(AppContext.BaseDirectory,
+                                           "Data",
+                                           "CustomerData.json");
             string? jsonData = File.ReadAllText(filePath);
 
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             };
-            List<Customer>? customers = JsonSerializer.Deserialize<List<Customer>>(jsonData, options);
+            List<Customer>? customers = JsonSerializer.Deserialize<List<Customer>>(jsonData,
+                                                                                   options);
 
             List<CustomerValue> allValues = [];
 
@@ -61,7 +63,7 @@ namespace RPApplication.Entities.DatabaseContext
                     Name = x.Name,
                     MpCode = x.MpCode,
                     Street = x.Street,
-                    SerialNumber = x.SerialNumber,
+                    SerialNo = x.SerialNo,
                     Values = []
                 }).ToList();
 

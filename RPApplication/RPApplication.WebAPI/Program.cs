@@ -5,7 +5,6 @@ using RPApplication.RepositoryContracts;
 using RPApplication.ServiceContracts;
 using RPApplication.Services;
 using RPApplication.WebAPI.Endpoints.v1;
-using System;
 
 namespace RPApplication.WebAPI
 {
@@ -35,17 +34,8 @@ namespace RPApplication.WebAPI
             {
                 options.AddDefaultPolicy(policyBuilder =>
                 {
-                    //var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
                     policyBuilder.AllowAnyOrigin();
                     policyBuilder.AllowAnyMethod();
-                    // if (allowedOrigins != null)
-                    // {
-                    //     policyBuilder.WithOrigins(allowedOrigins);
-                    //     policyBuilder.AllowAnyOrigin()
-                    //.AllowAnyMethod()
-                    //.AllowAnyHeader();
-                    //     //.WithHeaders("Authorization", "origin", "accept", "content-type");
-                    // }
                 });
             });
 

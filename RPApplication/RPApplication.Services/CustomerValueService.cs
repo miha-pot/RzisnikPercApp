@@ -22,7 +22,6 @@ namespace RPApplication.Services
             ValidationHelper.ModelValidation(addRequest);
 
             CustomerValue customerValue = addRequest.ToCustomerValue();
-            customerValue.RegDate = DateTime.Now;
 
             await _repository.AddAsync(customerValue);
 
@@ -48,6 +47,13 @@ namespace RPApplication.Services
             return customerValueList.Select(x => x.ToCustomerValueResponse()).ToList();
         }
 
+        public async Task<CustomerValueResponse?> GetByValueAndDate(double value, DateTime? date)
+        {
+            CustomerValue? customerValue = await _repository.GetByValueAndDate(value, date);
+
+            return customerValue?.ToCustomerValueResponse();
+        }
+
         public async Task<CustomerValueResponse?> GetItemById(string itemId)
         {
             CustomerValue? customerValue = await _repository.GetByIdAsync(itemId);
@@ -61,11 +67,12 @@ namespace RPApplication.Services
 
             ValidationHelper.ModelValidation(updateRequest);
 
-            CustomerValue? matchingCustomerValue = await _repository.GetByIdAsync(updateRequest.Reg1Value.ToString() + "" + updateRequest.RegDate.ToString());
+            string valueId = updateRequest.Reg1Value.ToString() + "" + updateRequest.RegDate.ToString();
+            CustomerValue? matchingCustomerValue = await _repository.GetByIdAsync(valueId);
 
             if (matchingCustomerValue == null)
             {
-                throw new ArgumentException($"Given order with id {updateRequest.Reg1Value + updateRequest.RegDate.ToString()} doesn't exists!");
+                throw new ArgumentException($"Given order with id {valueId} doesn't exists!");
             }
 
             matchingCustomerValue.ValueTypeDescription = updateRequest.ValueTypeDescription;

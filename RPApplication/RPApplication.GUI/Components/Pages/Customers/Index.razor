@@ -1,0 +1,325 @@
+﻿@page "/customers"
+@using RPApplication.WebGUI.DTOs
+@using RPApplication.WebGUI.DTOs.CustomerDTO
+@using RPApplication.WebGUI.ServiceContracts
+@inject ICustomerService CustomerService
+@inject NavigationManager NavManager
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<h3>Customer Index</h3>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label class="form-label">Search</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Name, Code..."
+                           @bind="requestParams.SearchTerm" />
+                    <button class="btn btn-primary" @onclick="Search">Search</button>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Page Size</label>
+                <select class="form-select" @onchange="OnPageSizeChanged">
+                    <option value="10">10 rows</option>
+                    <option value="20">20 rows</option>
+                    <option value="50">50 rows</option>
+                </select>
+            </div>
+
+            <div class="col-md-5 text-end align-self-end">
+                <button class="btn btn-success" @onclick="CreateNew">+ Add Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isLoading)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Loading data...</p>
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover border">
+        <thead class="table-light">
+            <tr>
+                 <th style="cursor: pointer" @onclick='() => Sort("ExternalCode")'>
+                    Ext Code @GetSortIcon("ExternalCode")
+                </th>
+                <th style="cursor: pointer" @onclick='() => Sort("SerialNo")'>
+                    Serial # @GetSortIcon("SerialNo")
+                </th>
+                <th style="cursor: pointer" @onclick='() => Sort("Name")'>
+                    Name @GetSortIcon("Name")
+                </th>
+
+                <th style="cursor: pointer" @onclick='() => Sort("MpCode")'>
+                    MP Code @GetSortIcon("MpCode")
+                </th>
+                <th style="cursor: pointer" @onclick='() => Sort("Street")'>
+                    Street @GetSortIcon("Street")
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>
+                    <input type="text" class="form-control form-control-sm"
+                           placeholder="Filter..."
+                           @bind="FilterExt"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </th>
+                <th>
+                    <input type="text" class="form-control form-control-sm"
+                           placeholder="Filter..."
+                           @bind="FilterSerial"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </th>
+                <th>
+                    <input type="text" class="form-control form-control-sm"
+                           placeholder="Filter..."
+                           @bind="FilterName"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </th>                
+                <th>
+                    <input type="text" class="form-control form-control-sm"
+                           placeholder="Filter..."
+                           @bind="FilterMp"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </th>
+                <th>
+                    <input type="text" class="form-control form-control-sm"
+                           placeholder="Filter..."
+                           @bind="FilterStreet"
+                           @bind:event="oninput"
+                           @bind:after="ApplyFilters" />
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in visibleCustomers)
+            {
+                <tr>
+                    <td>@customer.ExternalCode</td>
+                    <td>@customer.SerialNumber</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.MpCode</td>
+                    <td>@customer.Street</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-dark" @onclick="() => CustomerValues(customer.ExternalCode)">Values</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="() => Edit(customer.ExternalCode)">Edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => Delete(customer)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <span class="text-muted">Page @requestParams.PageNumber (Size: @requestParams.PageSize)</span>
+
+        <div>
+            <button class="btn btn-secondary me-1"
+                    disabled="@(requestParams.PageNumber == 1)"
+                    @onclick="PrevPage">
+                Previous
+            </button>
+
+            <button class="btn btn-secondary"
+                    disabled="@(allCustomers.Count < requestParams.PageSize)"
+                    @onclick="NextPage">
+                Next
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private RequestParameters requestParams = new RequestParameters();
+
+    private List<CustomerResponse> allCustomers = new();
+    private List<CustomerResponse> visibleCustomers = new();
+
+    private string FilterSerial = "";
+    private string FilterName = "";
+    private string FilterExt = "";
+    private string FilterMp = "";
+    private string FilterStreet = "";
+
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Set defaults if not set in class definition
+        requestParams.PageSize = 10;
+        requestParams.SortColumn = "ExternalCode";
+        requestParams.SortOrder = "asc";
+
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        isLoading = true;
+        try
+        {
+            // Pass the built object to the Service
+            allCustomers = await CustomerService.GetCustomers(requestParams);
+
+            visibleCustomers = allCustomers;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // --- User Actions Updates requestParams ---
+
+    private void ApplyFilters()
+    {
+        // Start with the full list
+        var query = allCustomers.AsEnumerable();
+
+        // Apply Serial Number Filter
+        if (!string.IsNullOrWhiteSpace(FilterSerial))
+        {
+            query = query.Where(c => c.SerialNumber!.Contains(FilterSerial, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply Name Filter
+        if (!string.IsNullOrWhiteSpace(FilterName))
+        {
+            query = query.Where(c => c.Name!.Contains(FilterName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply Ext Code Filter
+        if (!string.IsNullOrWhiteSpace(FilterExt))
+        {
+            query = query.Where(c => c.ExternalCode!.Contains(FilterExt, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply MP Code Filter
+        if (!string.IsNullOrWhiteSpace(FilterMp))
+        {
+            query = query.Where(c => c.MpCode!.Contains(FilterMp, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Apply Street Filter
+        if (!string.IsNullOrWhiteSpace(FilterStreet))
+        {
+            query = query.Where(c => c.Street!.Contains(FilterStreet, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Update the view
+        visibleCustomers = query.ToList();
+
+        // Optional: If you have an active sort column, re-apply the sort here
+        // Sort(currentSortColumn);
+    }
+
+
+    private async Task Search()
+    {
+        requestParams.PageNumber = 1; // Always reset to page 1 on new search
+        await LoadData();
+    }
+
+    private async Task OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int newSize))
+        {
+            requestParams.PageSize = newSize;
+            requestParams.PageNumber = 1; // Reset page to avoid out of bounds
+            await LoadData();
+        }
+    }
+
+    private async Task Sort(string column)
+    {
+        // Logic to toggle ASC/DESC
+        if (requestParams.SortColumn == column)
+        {
+            requestParams.SortOrder = requestParams.SortOrder == "asc" ? "desc" : "asc";
+        }
+        else
+        {
+            requestParams.SortColumn = column;
+            requestParams.SortOrder = "asc";
+        }
+
+        await LoadData();
+    }
+
+    private async Task NextPage()
+    {
+        requestParams.PageNumber++;
+        await LoadData();
+    }
+
+    private async Task PrevPage()
+    {
+        if (requestParams.PageNumber > 1)
+        {
+            requestParams.PageNumber--;
+            await LoadData();
+        }
+    }
+
+    // --- Helper for UI ---
+    private string GetSortIcon(string column)
+    {
+        if (requestParams.SortColumn != column) return "↕";
+        return requestParams.SortOrder == "asc" ? "↑" : "↓";
+    }
+
+    private void CreateNew() => NavManager.NavigateTo("/customers/create");
+    private void Edit(string? id) => NavManager.NavigateTo($"/customers/edit/{id}");
+    private void CustomerValues(string? id) => NavManager.NavigateTo($"/values/{id}");
+
+    private async Task Delete(CustomerResponse customerToDelete)
+    {
+        if (string.IsNullOrEmpty(customerToDelete.ExternalCode)) return;
+
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to delete {customerToDelete.Name}?");
+
+        if (confirmed)
+        {
+            try
+            {
+                // 1. Call API and Capture the Message
+                string? successMessage = await CustomerService.Delete(customerToDelete.ExternalCode);
+
+                // 2. Show the message from API to the user
+                await JS.InvokeVoidAsync("alert", successMessage);
+
+                // 3. Update UI
+                allCustomers.Remove(customerToDelete);
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("alert", "Error: " + ex.Message);
+            }
+        }
+    }
+}
