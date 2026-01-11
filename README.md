@@ -7,12 +7,51 @@ This app's use case is for an administrator to be able to check what is happenin
 * **Backend:** .NET 8, Minimal API, Entity Framework Core (InMemory)
 * **Frontend:** Blazor Web App
 
+## Prerequisites
+Requires .NET 8 SDK.
+
 ## ⚡ How to Run
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/miha-pot/RzisnikPercApp.git
     ```
 2.  **Start the project** : The API and GUI will both start at the same time.
+
+## Arhitecture overview
+I used a Clean Architecture approach to separate concerns. Services handle business logic, Repositories handle data access, and SharedDTO ensures loose coupling between the API and GUI.
+
+```
+RPApplication
+├───RPApplication.Entities
+│   ├───DatabaseContext
+│   ├───Models
+│   └───RequestFeatures
+├───RPApplication.GUI
+│   ├───Components
+│   │   ├───Layout
+│   │   └───Pages
+│   │       ├───Customers
+│   │       └───CustomerValues
+│   ├───DTOs
+│   ├───Properties
+│   ├───ServiceContracts
+│   ├───Services
+│   └───wwwroot
+│       └───bootstrap
+├───RPApplication.Repositories
+│   └───Extensions
+├───RPApplication.RepositoryContracts
+├───RPApplication.ServiceContracts
+│   └───Mappers
+├───RPApplication.Services
+│   └───Helpers
+├───RPApplication.SharedDTO
+└───RPApplication.WebAPI
+    ├───Data
+    ├───Endpoints
+    │   └───v1    
+    └───Properties
+```
 
 ## 🔌 API Endpoints
 
