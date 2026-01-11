@@ -2,6 +2,9 @@
 {
     public class CustomerValue
     {
+        /// <summary>
+        /// Domain model for storing customer values.
+        /// </summary>
         public double Reg1Value { get; set; }
 
         public DateTime? RegDate { get; set; }

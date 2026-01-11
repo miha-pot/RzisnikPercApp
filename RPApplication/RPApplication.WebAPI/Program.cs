@@ -36,8 +36,9 @@ namespace RPApplication.WebAPI
                 {
                     policyBuilder.AllowAnyOrigin();
                     policyBuilder.AllowAnyMethod();
+                    policyBuilder.AllowAnyHeader();
                 });
-            });
+            });  
 
             var app = builder.Build();
 
@@ -59,6 +60,7 @@ namespace RPApplication.WebAPI
 
                 context.Database.EnsureCreated();
             }
+
 
             app.Run();
         }

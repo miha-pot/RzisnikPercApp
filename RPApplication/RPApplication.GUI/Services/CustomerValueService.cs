@@ -1,6 +1,6 @@
-﻿using RPApplication.WebGUI.DTOs.CustomerValueDTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using RPApplication.SharedDTO;
 using RPApplication.WebGUI.ServiceContracts;
-using System.Net;
 
 namespace RPApplication.WebGUI.Services
 {
@@ -13,7 +13,7 @@ namespace RPApplication.WebGUI.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<CustomerValueResponse>> GetCustomerValues(string customerCode)
+        public async Task<List<CustomerValueDTO>> GetCustomerValues(string customerCode)
         {
             var response = await _httpClient.GetAsync($"values?customerCode={customerCode}");
 
@@ -22,12 +22,12 @@ namespace RPApplication.WebGUI.Services
                 return [];
             }
 
-            var result = await response.Content.ReadFromJsonAsync<List<CustomerValueResponse>>();
+            var result = await response.Content.ReadFromJsonAsync<List<CustomerValueDTO>>();
 
             return result ?? [];
         }
 
-        public async Task<string[]?> Create(CustomerValueAddRequest addRequest)
+        public async Task<string[]?> Create(CustomerValueDTO addRequest)
         {
             var response = await _httpClient.PostAsJsonAsync("values/create", addRequest);
 
@@ -35,21 +35,13 @@ namespace RPApplication.WebGUI.Services
             {
                 return null;
             }
+            else
+            {
+                var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
-            if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return [error];
-            }
+                string errorMessage = problemDetails?.Detail ?? "An unexpected error occurred.";
 
-            try
-            {
-                return await response.Content.ReadFromJsonAsync<string[]>();
-            }
-            catch
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return ["An unexpected error occurred.", error];
+                return [errorMessage];
             }
         }
     }

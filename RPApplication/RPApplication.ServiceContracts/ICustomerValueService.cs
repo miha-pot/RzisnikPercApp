@@ -1,10 +1,10 @@
-﻿using RPApplication.ServiceContracts.DTO.CustomerValueDTO;
+﻿using RPApplication.SharedDTO;
 
 namespace RPApplication.ServiceContracts
 {
-    public interface ICustomerValueService : ICommonService<CustomerValueAddRequest, CustomerValueResponse, CustomerValueUpdateRequest>
+    public interface ICustomerValueService : ICommonService<CustomerValueDTO>
     {
-        Task<List<CustomerValueResponse>> GetAllItems(string customerCode);
-        Task<CustomerValueResponse?> GetByValueAndDate(double value, DateTime? date);
+        Task<List<CustomerValueDTO>> GetAllItems(string customerCode);
+        Task<CustomerValueDTO?> GetByValueAndDate(double value, DateTime? date);
     }
 }

@@ -34,7 +34,7 @@ namespace RPApplication.Entities.DatabaseContext
                                            "CustomerData.json");
             string? jsonData = File.ReadAllText(filePath);
 
-            var options = new JsonSerializerOptions
+            JsonSerializerOptions options = new()
             {
                 PropertyNameCaseInsensitive = true
             };

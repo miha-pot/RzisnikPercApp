@@ -2,6 +2,9 @@
 
 namespace RPApplication.Entities.Models
 {
+    /// <summary>
+    /// Domain model for storing customer details.
+    /// </summary>
     public class Customer
     {
         [Key]

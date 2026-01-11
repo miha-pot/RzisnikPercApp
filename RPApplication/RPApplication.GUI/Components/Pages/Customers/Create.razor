@@ -1,6 +1,6 @@
 ﻿@page "/customers/create"
 @using System.ComponentModel.DataAnnotations
-@using RPApplication.WebGUI.DTOs.CustomerDTO
+@using RPApplication.SharedDTO
 @using RPApplication.WebGUI.ServiceContracts
 @inject ICustomerService CustomerService
 @inject NavigationManager NavManager
@@ -81,7 +81,7 @@
 
 @code {
     [SupplyParameterFromForm(FormName = "CreateCustomerForm")]
-    private CustomerAddRequest customer { get; set; } = new();
+    private CustomerDTO customer { get; set; } = new();
     private string[]? apiErrors;
     private bool isSubmitting = false;
 
@@ -90,7 +90,6 @@
         isSubmitting = true;
         apiErrors = null;
 
-        // Create a flag to track success
         bool success = false;
 
         try

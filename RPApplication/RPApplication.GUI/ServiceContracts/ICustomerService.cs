@@ -1,14 +1,14 @@
-﻿using RPApplication.WebGUI.DTOs;
-using RPApplication.WebGUI.DTOs.CustomerDTO;
+﻿using RPApplication.SharedDTO;
+using RPApplication.WebGUI.DTOs;
 
 namespace RPApplication.WebGUI.ServiceContracts
 {
     public interface ICustomerService
     {
-        Task<List<CustomerResponse>> GetCustomers(RequestParameters parameters);
-        Task<string[]?> Create(CustomerAddRequest addRequest);
+        Task<List<CustomerDTO>> GetCustomers(RequestParameters parameters);
+        Task<string[]?> Create(CustomerDTO addRequest);
         Task<string> Delete(string externalCode);
-        Task<string[]?> Edit(CustomerUpdateRequest updateRequest);
-        Task<CustomerResponse?> GetCustomerById(string customerExternalCode);
+        Task<string[]?> Edit(CustomerDTO updateRequest);
+        Task<CustomerDTO?> GetCustomerById(string customerExternalCode);
     }
 }

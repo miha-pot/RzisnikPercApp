@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RPApplication.WebGUI.DTOs.CustomerDTO
+namespace RPApplication.SharedDTO
 {
-    public class CustomerAddRequest
+    public class CustomerDTO
     {
+        /// <summary>
+        /// Customer identifier. Must be unique
+        /// </summary>
         [Required(ErrorMessage = "Customer external code is required!")]
         public string? ExternalCode { get; set; }
 

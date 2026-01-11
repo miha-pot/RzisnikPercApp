@@ -1,10 +1,10 @@
-﻿using RPApplication.WebGUI.DTOs.CustomerValueDTO;
+﻿using RPApplication.SharedDTO;
 
 namespace RPApplication.WebGUI.ServiceContracts
 {
     public interface ICustomerValueService
     {
-        Task<List<CustomerValueResponse>> GetCustomerValues(string customerCode);
-        Task<string[]?> Create(CustomerValueAddRequest addRequest);
+        Task<List<CustomerValueDTO>> GetCustomerValues(string customerCode);
+        Task<string[]?> Create(CustomerValueDTO addRequest);
     }
 }

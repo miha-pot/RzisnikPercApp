@@ -1,6 +1,6 @@
 ﻿@page "/values/{CustomerCode}"
+@using RPApplication.SharedDTO
 @using RPApplication.WebGUI.DTOs
-@using RPApplication.WebGUI.DTOs.CustomerValueDTO
 @using RPApplication.WebGUI.ServiceContracts
 @inject ICustomerValueService CustomerValueService
 @inject NavigationManager NavManager
@@ -21,6 +21,7 @@ else
     <div class="card mb-4">
         <div class="card-body">
             <div class="row">
+                <div class="col-md-7"></div>
                 <div class="col-md-5 text-end align-self-end">
                     <button class="btn btn-success" @onclick="CreateNew">+ Add value</button>
                 </div>
@@ -57,7 +58,7 @@ else
 
     <div class="row">
         <ApexChart TItem="ConsumptionData"
-                   Title="@($"Consumption in {_unit}")"
+                   Title="@($"Consumption")"
                    Options="_options" Width="1000">
 
             <ApexPointSeries TItem="ConsumptionData"
@@ -75,7 +76,7 @@ else
     [Parameter]
     public string? CustomerCode { get; set; }
 
-    private List<CustomerValueResponse> CustomerValues = new();
+    private List<CustomerValueDTO> CustomerValues = new();
     private List<ConsumptionData>? _chartData;
     private bool isLoading = false;
     private ApexChartOptions<ConsumptionData>? _options;
@@ -95,7 +96,7 @@ else
             Yaxis = new List<YAxis> {
                 new YAxis { Title = new AxisTitle { Text = "Consumption" } }
             },
-            Colors = new List<string> { "#008FFB" } // Set your preferred color
+            Colors = new List<string> { "#008FFB" }
         };
 
         if (CustomerValues != null && CustomerValues.Any())
@@ -107,7 +108,6 @@ else
 
     private void CalculateConsumption()
     {
-        // Step A: Clean and Sort the raw data
         var sorted = CustomerValues
             .Where(x => x.RegDate.HasValue)
             .OrderBy(x => x.RegDate)
@@ -115,27 +115,19 @@ else
 
         var result = new List<ConsumptionData>();
 
-        // Get the unit for display (safely)
-        _unit = sorted.FirstOrDefault()?.ValueTypeUnit ?? "Units";
-
-        // Step B: Loop starting from the SECOND item (Index 1)
         for (int i = 1; i < sorted.Count; i++)
         {
             var current = sorted[i];
             var previous = sorted[i - 1];
 
-            // Step C: Calculate Difference (Current - Previous)
             double diff = current.Reg1Value - previous.Reg1Value;
 
-            // Optional: Handle meter rollovers or bad data (negative consumption)
             if (diff < 0) diff = 0;
 
             result.Add(new ConsumptionData
             {
-                // Format date as desired (e.g., "Jan 01" or "01/01/2023")
                 DateLabel = current.RegDate!.Value.ToString("dd MMM yyyy"),
 
-                // ApexCharts often prefers decimal for financial/precise data
                 Consumption = (decimal)diff
             });
         }
@@ -153,7 +145,6 @@ else
                 return;
             }
 
-            // Pass the built object to the Service
             CustomerValues = await CustomerValueService.GetCustomerValues(CustomerCode);
         }
         finally

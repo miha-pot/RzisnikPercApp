@@ -1,11 +1,15 @@
 ﻿using RPApplication.Entities.Models;
 using RPApplication.RepositoryContracts;
 using RPApplication.ServiceContracts;
-using RPApplication.ServiceContracts.DTO.CustomerValueDTO;
+using RPApplication.ServiceContracts.Mappers;
 using RPApplication.Services.Helpers;
+using RPApplication.SharedDTO;
 
 namespace RPApplication.Services
 {
+    /// <summary>
+    /// Customer value business logic methods.
+    /// </summary>
     public class CustomerValueService : ICustomerValueService
     {
         private readonly ICustomerValueRepository _repository;
@@ -15,7 +19,7 @@ namespace RPApplication.Services
             _repository = repository;
         }
 
-        public async Task<CustomerValueResponse> CreateItem(CustomerValueAddRequest? addRequest)
+        public async Task<CustomerValueDTO> CreateItem(CustomerValueDTO? addRequest)
         {
             ArgumentNullException.ThrowIfNull(addRequest);
 
@@ -25,7 +29,7 @@ namespace RPApplication.Services
 
             await _repository.AddAsync(customerValue);
 
-            return customerValue.ToCustomerValueResponse();
+            return customerValue.ToCustomerValueDTO();
         }
 
         public async Task<bool> DeleteItem(string itemId)
@@ -40,28 +44,28 @@ namespace RPApplication.Services
             return await _repository.DeleteAsync(itemId);
         }
 
-        public async Task<List<CustomerValueResponse>> GetAllItems(string customerCode)
+        public async Task<List<CustomerValueDTO>> GetAllItems(string customerCode)
         {
             List<CustomerValue> customerValueList = await _repository.GetCustomerValues(customerCode);
 
-            return customerValueList.Select(x => x.ToCustomerValueResponse()).ToList();
+            return customerValueList.Select(x => x.ToCustomerValueDTO()).ToList();
         }
 
-        public async Task<CustomerValueResponse?> GetByValueAndDate(double value, DateTime? date)
+        public async Task<CustomerValueDTO?> GetByValueAndDate(double value, DateTime? date)
         {
             CustomerValue? customerValue = await _repository.GetByValueAndDate(value, date);
 
-            return customerValue?.ToCustomerValueResponse();
+            return customerValue?.ToCustomerValueDTO();
         }
 
-        public async Task<CustomerValueResponse?> GetItemById(string itemId)
+        public async Task<CustomerValueDTO?> GetItemById(string itemId)
         {
             CustomerValue? customerValue = await _repository.GetByIdAsync(itemId);
 
-            return customerValue?.ToCustomerValueResponse();
+            return customerValue?.ToCustomerValueDTO();
         }
 
-        public async Task<CustomerValueResponse> UpdateItem(CustomerValueUpdateRequest? updateRequest)
+        public async Task<CustomerValueDTO> UpdateItem(CustomerValueDTO? updateRequest)
         {
             ArgumentNullException.ThrowIfNull(updateRequest);
 
@@ -80,7 +84,7 @@ namespace RPApplication.Services
 
             await _repository.UpdateAsync(matchingCustomerValue);
 
-            return matchingCustomerValue.ToCustomerValueResponse();
+            return matchingCustomerValue.ToCustomerValueDTO();
         }
     }
 }

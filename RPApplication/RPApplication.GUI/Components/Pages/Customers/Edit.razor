@@ -1,6 +1,6 @@
 ﻿@page "/customers/edit/{Id}"
 @using System.ComponentModel.DataAnnotations
-@using RPApplication.WebGUI.DTOs.CustomerDTO
+@using RPApplication.SharedDTO
 @using RPApplication.WebGUI.ServiceContracts
 @inject ICustomerService CustomerService
 @inject NavigationManager NavManager
@@ -9,7 +9,7 @@
 <div class="container mt-4">
     <div class="card shadow-sm" style="max-width: 600px; margin: auto;">
         <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Create New Customer</h4>
+            <h4 class="mb-0">Edit Customer</h4>
         </div>
         <div class="card-body">
 
@@ -80,7 +80,7 @@
 
 @code {
     [SupplyParameterFromForm(FormName = "EditCustomerForm")]
-    private CustomerUpdateRequest customer { get; set; } = new();
+    private CustomerDTO customer { get; set; } = new();
     private string[]? apiErrors;
     private bool isSubmitting = false;
 
@@ -96,7 +96,7 @@
             return;
         }
 
-        CustomerResponse? customerResponse = await CustomerService.GetCustomerById(Id);
+        CustomerDTO? customerResponse = await CustomerService.GetCustomerById(Id);
 
         if (customerResponse == null)
         {
@@ -105,14 +105,7 @@
             return;
         }
 
-        customer = new CustomerUpdateRequest()
-        {
-            ExternalCode = customerResponse.ExternalCode,
-            MpCode = customerResponse.MpCode,
-            Name = customerResponse.Name,
-            SerialNumber = customerResponse.SerialNumber,
-            Street = customerResponse.Street
-        };
+        customer = customerResponse;
     }
 
     private async Task HandleSubmit()
@@ -120,7 +113,6 @@
         isSubmitting = true;
         apiErrors = null;
 
-        // Create a flag to track success
         bool success = false;
 
         try

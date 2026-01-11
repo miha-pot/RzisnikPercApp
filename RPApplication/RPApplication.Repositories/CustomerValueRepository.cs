@@ -5,6 +5,9 @@ using RPApplication.RepositoryContracts;
 
 namespace RPApplication.Repositories
 {
+    /// <summary>
+    /// Customer value specific SQL operation methods.
+    /// </summary>
     public class CustomerValueRepository : Repository<CustomerValue>, ICustomerValueRepository
     {
         public CustomerValueRepository(ApplicationDbContext db) : base(db)

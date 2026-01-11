@@ -4,6 +4,10 @@ using RPApplication.RepositoryContracts;
 
 namespace RPApplication.Repositories
 {
+    /// <summary>
+    /// Generic class for common database CRUD operations with EntityFramework.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Repository<T> : IRepository<T>
         where T : class
     {

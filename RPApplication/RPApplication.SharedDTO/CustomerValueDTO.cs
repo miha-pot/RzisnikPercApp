@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RPApplication.WebGUI.DTOs.CustomerValueDTO
+namespace RPApplication.SharedDTO
 {
-    public class CustomerValueAddRequest
+    public class CustomerValueDTO
     {
+        /// <summary>
+        /// First part of CustomerValue identifier
+        /// </summary>
         [Required(ErrorMessage = "Reg value is required!")]
         public double Reg1Value { get; set; }
 
+        /// <summary>
+        /// Second part of CustomerValue identifier
+        /// </summary>
         [Required(ErrorMessage = "Reg date is required!")]
         public DateTime? RegDate { get; set; }
 

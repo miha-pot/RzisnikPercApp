@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using RPApplication.ServiceContracts;
-using RPApplication.ServiceContracts.DTO.CustomerValueDTO;
+﻿using RPApplication.ServiceContracts;
 using RPApplication.Services.Helpers;
+using RPApplication.SharedDTO;
 using System.ComponentModel.DataAnnotations;
 
 namespace RPApplication.WebAPI.Endpoints.v1
@@ -18,12 +17,12 @@ namespace RPApplication.WebAPI.Endpoints.v1
                                                  ICustomerValueService customerValueService,
                                                  HttpContext context)
         {
-            List<CustomerValueResponse> customerValues = await customerValueService.GetAllItems(customerCode);
+            List<CustomerValueDTO> customerValues = await customerValueService.GetAllItems(customerCode);
 
             return Results.Ok(customerValues);
         }
 
-        public static async Task<IResult> Create(CustomerValueAddRequest addRequest,
+        public static async Task<IResult> Create(CustomerValueDTO addRequest,
                                                  ICustomerValueService customerValueService)
         {
             if (addRequest == null)
@@ -37,7 +36,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem(errorsMessages);
             }
 
-            CustomerValueResponse? customerValueResponse = await customerValueService.GetByValueAndDate(addRequest.Reg1Value,
+            CustomerValueDTO? customerValueResponse = await customerValueService.GetByValueAndDate(addRequest.Reg1Value,
                                                                                                         addRequest.RegDate);
 
             if (customerValueResponse != null)
@@ -47,6 +46,11 @@ namespace RPApplication.WebAPI.Endpoints.v1
             }
 
             customerValueResponse = await customerValueService.CreateItem(addRequest);
+
+            if (customerValueResponse == null)
+            {
+                return Results.Problem("There was a problem creating customer values. Check backend logs.");
+            }
 
             return Results.Ok(customerValueResponse);
         }

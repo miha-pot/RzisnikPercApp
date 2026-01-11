@@ -6,6 +6,9 @@ using RPApplication.RepositoryContracts;
 
 namespace RPApplication.Repositories
 {
+    /// <summary>
+    /// Customer specific SQL operation methods.
+    /// </summary>
     public class CustomerRepository : Repository<Customer>, ICustomerRepository
     {
         public CustomerRepository(ApplicationDbContext db) : base(db)

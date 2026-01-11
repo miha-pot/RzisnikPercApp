@@ -1,7 +1,7 @@
 ﻿using RPApplication.Entities.RequestFeatures;
 using RPApplication.ServiceContracts;
-using RPApplication.ServiceContracts.DTO.CustomerDTO;
 using RPApplication.Services.Helpers;
+using RPApplication.SharedDTO;
 using System.ComponentModel.DataAnnotations;
 
 namespace RPApplication.WebAPI.Endpoints.v1
@@ -21,7 +21,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                                                  ICustomerService customerService,
                                                  HttpContext context)
         {
-            PagedList<CustomerResponse> pagedCustomers = await customerService.GetAllItems(parameters);
+            PagedList<CustomerDTO> pagedCustomers = await customerService.GetAllItems(parameters);
 
             var metaData = new
             {
@@ -38,7 +38,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
             return Results.Ok(pagedCustomers);
         }
 
-        public static async Task<IResult> Create(CustomerAddRequest addRequest,
+        public static async Task<IResult> Create(CustomerDTO addRequest,
                                                  ICustomerService customerService)
         {
             if (addRequest == null)
@@ -52,7 +52,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem(errorsMessages);
             }
 
-            CustomerResponse? customerResponse = await customerService.GetItemById(addRequest.ExternalCode!);
+            CustomerDTO? customerResponse = await customerService.GetItemById(addRequest.ExternalCode!);
 
             if (customerResponse != null)
             {
@@ -72,7 +72,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem("Customer id was not provided!");
             }
 
-            CustomerResponse? customerResponse = await customerService.GetItemById(customerExternalCode);
+            CustomerDTO? customerResponse = await customerService.GetItemById(customerExternalCode);
 
             if (customerResponse == null)
             {
@@ -97,7 +97,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem("Customer id was not provided!");
             }
 
-            CustomerResponse? customerResponse = await customerService.GetItemById(customerId);
+            CustomerDTO? customerResponse = await customerService.GetItemById(customerId);
 
             if (customerResponse == null)
             {
@@ -108,7 +108,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
         }
 
 
-        public static async Task<IResult> Update(CustomerUpdateRequest? updateRequest,
+        public static async Task<IResult> Update(CustomerDTO? updateRequest,
                                                  ICustomerService customerService)
         {
             if (updateRequest == null)
@@ -123,7 +123,7 @@ namespace RPApplication.WebAPI.Endpoints.v1
                 return Results.Problem(errorsMessages);
             }
 
-            CustomerResponse? customerResponse = await customerService.UpdateItem(updateRequest);
+            CustomerDTO? customerResponse = await customerService.UpdateItem(updateRequest);
 
             if (customerResponse == null)
             {

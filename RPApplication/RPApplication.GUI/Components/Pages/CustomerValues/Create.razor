@@ -1,5 +1,5 @@
 ﻿@page "/values/create/{CustomerCode}"
-@using RPApplication.WebGUI.DTOs.CustomerValueDTO
+@using RPApplication.SharedDTO
 @using RPApplication.WebGUI.ServiceContracts
 @inject NavigationManager Navigation
 @inject ICustomerValueService CustomerValueService
@@ -61,7 +61,7 @@
     public string? CustomerCode { get; set; }
 
     [SupplyParameterFromForm(FormName = "CreateCustomerValueForm")]
-    private CustomerValueAddRequest addRequest { get; set; } = new CustomerValueAddRequest();
+    private CustomerValueDTO addRequest { get; set; } = new();
 
     private string[]? apiErrors;
     private bool isSubmitting = false;

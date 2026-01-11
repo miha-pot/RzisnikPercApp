@@ -1,5 +1,6 @@
-﻿using RPApplication.WebGUI.DTOs;
-using RPApplication.WebGUI.DTOs.CustomerDTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using RPApplication.SharedDTO;
+using RPApplication.WebGUI.DTOs;
 using RPApplication.WebGUI.ServiceContracts;
 
 namespace RPApplication.WebGUI.Services
@@ -13,7 +14,7 @@ namespace RPApplication.WebGUI.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<CustomerResponse>> GetCustomers(RequestParameters parameters)
+        public async Task<List<CustomerDTO>> GetCustomers(RequestParameters parameters)
         {
             var response = await _httpClient.PostAsJsonAsync("customers", parameters);
 
@@ -22,12 +23,12 @@ namespace RPApplication.WebGUI.Services
                 return [];
             }
 
-            var result = await response.Content.ReadFromJsonAsync<List<CustomerResponse>>();
+            var result = await response.Content.ReadFromJsonAsync<List<CustomerDTO>>();
 
             return result ?? [];
         }
 
-        public async Task<string[]?> Create(CustomerAddRequest addRequest)
+        public async Task<string[]?> Create(CustomerDTO addRequest)
         {
             var response = await _httpClient.PostAsJsonAsync("customers/create", addRequest);
 
@@ -35,15 +36,13 @@ namespace RPApplication.WebGUI.Services
             {
                 return null;
             }
+            else
+            {
+                var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
-            try
-            {
-                return await response.Content.ReadFromJsonAsync<string[]>();
-            }
-            catch
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return ["An unexpected error occurred.", error];
+                string errorMessage = problemDetails?.Detail ?? "An unexpected error occurred.";
+
+                return [errorMessage];
             }
         }
 
@@ -56,27 +55,28 @@ namespace RPApplication.WebGUI.Services
                 return await response.Content.ReadAsStringAsync();
             }
 
-            // Handle failure
-            throw new Exception($"Failed to delete. Status: {response.StatusCode}");
+            return $"Failed to delete. Status: {response.StatusCode}";
         }
 
-        public async Task<string[]?> Edit(CustomerUpdateRequest updateRequest)
+        public async Task<string[]?> Edit(CustomerDTO updateRequest)
         {
             var response = await _httpClient.PutAsJsonAsync("customers/update", updateRequest);
 
-            try
+            if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<string[]>();
+                return null;
             }
-            catch
+            else
             {
-                var error = await response.Content.ReadAsStringAsync();
-                return ["An unexpected error occurred.", error];
-            }
+                var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
 
+                string errorMessage = problemDetails?.Detail ?? "An unexpected error occurred.";
+
+                return [errorMessage];
+            }
         }
 
-        public async Task<CustomerResponse?> GetCustomerById(string customerExternalCode)
+        public async Task<CustomerDTO?> GetCustomerById(string customerExternalCode)
         {
             var response = await _httpClient.GetAsync("customers/details?customerId=" + customerExternalCode);
 
@@ -85,7 +85,7 @@ namespace RPApplication.WebGUI.Services
                 return null;
             }
 
-            return await response.Content.ReadFromJsonAsync<CustomerResponse?>();
+            return await response.Content.ReadFromJsonAsync<CustomerDTO?>();
         }
     }
 }
